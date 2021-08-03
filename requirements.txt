@@ -1,0 +1,13 @@
+numpy
+pandas
+torch
+matplotlib
+transforms3d
+opencv-python
+imageio
+imageio-ffmpeg
+configargparse
+pillow
+pyrtools
+ptflops
+tqdm
