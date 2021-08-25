@@ -73,7 +73,7 @@ For running just an inference pass for all the test images and for a given video
 This also takes the same arguments and configuration files as `src/train.py` does, so following the example for the training command, you can use `src/test.py` as follows:
 
 ```bash
-python train.py -c ../configs/DONeRF_2_samples.ini --data /data/classroom/ --logDir /data/output_results/ --device 0 --storeFullData --numRayMarchSamples 8 --numRayMarchSamples 8 --camPath cam_path_rotate --outputVideoName cam_path_rotate --videoFrames 300
+python test.py -c ../configs/DONeRF_2_samples.ini --data /data/classroom/ --logDir /data/output_results/ --device 0 --storeFullData --numRayMarchSamples 8 --numRayMarchSamples 8 --camPath cam_path_rotate --outputVideoName cam_path_rotate --videoFrames 300
 ```
 
 ### Evaluation
