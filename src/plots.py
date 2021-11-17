@@ -190,28 +190,17 @@ def render_all_imgs(train_config: TrainConfig, subfolder_name="", dataset_name="
         if train_config.config_file.rayMarchNormalization is not None and len(train_config.config_file.rayMarchNormalization) > 0:
             raw_save_suffix += nerf_get_normalization_function_abbr(train_config.config_file.rayMarchNormalization[-1])
 
-        if FeatureSetKeyConstants.input_depth_range in inference_dict_full_list[-1] and \
-                FeatureSetKeyConstants.nerf_weights_output in inference_dict_full_list[-1] and \
-                FeatureSetKeyConstants.nerf_estimated_depth in inference_dict_full_list[-1]:
-            # Load both the depth_range and the weights
-            weights = inference_dict_full_list[-1][FeatureSetKeyConstants.nerf_weights_output]
+        if FeatureSetKeyConstants.nerf_estimated_depth in inference_dict_full_list[-1]:
+            # Load depth range and depth map
             depth_range = inference_dict_full_list[-1][FeatureSetKeyConstants.input_depth_range]
             depth_map = inference_dict_full_list[-1][FeatureSetKeyConstants.nerf_estimated_depth]
 
-            output_dict = {}
-
             # In case the depth range contains more than 2 elements due to the export
             input_depth_range = depth_range[:2]
-            output_dict[FeatureSetKeyConstants.input_depth_range] = input_depth_range
 
-            quantization_max_weight = (torch.max(weights, axis=2)[0])[..., None]
-
-            output_dict[FeatureSetKeyConstants.output_depth_map] = depth_transforms.LogTransform.to_world(depth_map, input_depth_range)
-
-            save_img(depth_map[..., None], train_config.dataset_info, f"{train_config.logDir}{subfolder_name}{dataset_name}/{i}_{FeatureSetKeyConstants.quantized_weights}_{raw_save_suffix}_depth.png")
-
-            # Finally, save the full output dict as this is all we need for training our CD oracles.
-            torch.save(output_dict, f"{train_config.logDir}{subfolder_name}{dataset_name}/{i}_{FeatureSetKeyConstants.quantized_weights}_{raw_save_suffix}.raw")
+            world_depth = train_config.f_in[-1].depth_transform.to_world(depth_map, input_depth_range[-1])
+            np.savez(f"{train_config.logDir}{subfolder_name}{dataset_name}/{i:05d}_depth.npz", world_depth)
+            save_img(depth_map[..., None], train_config.dataset_info, f"{train_config.logDir}{subfolder_name}{dataset_name}/{i}_{raw_save_suffix}_depth.png")
         else:
             for j in range(len(inference_dict_full_list)):
                 for key in inference_dict_full_list[j]:
