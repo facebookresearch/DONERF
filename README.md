@@ -86,6 +86,31 @@ This script only requires the `--data` and `--logDir` options to locate the resu
 
 To aggregate the resulting outputs (MSE, SSIM, FLIP, FLOP / Pixel, Number of Parameters), you can use `src/comparison.py` to generate a resulting `.csv` file.
 
+### Training without Groundtruth Depth (DONeRF-noGT)
+
+In order to replicate the results presented for the DONeRF-noGT variant in our paper, you can follow these steps:
+
+1. Train a large capacity basic NeRF which we will use to export a depth estimate from. Make sure that your depth ranges (see `dataset_info.json` in our dataset) roughly correspond to your scene, or estimate near and far ranges by using outputs from e.g. COLMAP. To train this large NeRF, you can adapt the following command (executed from within the `src/` directory):
+
+```bash
+python train.py -c ../configs/NeRF_coarse_only_128_samples_log+warp_huge.ini --data /data/classroom/ --logDir /data/output_results/ --device 0 --storeFullData --scale 1
+```
+
+2. Use `test.py` to export the necessary `XXXXX_depth.npz` depth estimates that we will later use to train a DONeRF-noGT. **Make sure that you export this at the original resolution, i.e., use `--scale 1`!**:
+
+```bash
+python train.py -c ../configs/NeRF_coarse_only_128_samples_log+warp_huge.ini --data /data/classroom/ --logDir /data/output_results/ --device 0 --storeFullData --scale 1
+```
+
+This will write all depth estimates for the `train`, `val` and `test` sets into the `/data/output_results/classroom/<large_nerf_dir>/test_images/<set>` directories. 
+
+3. Copy the `XXXXX_depth.npz` depth estimates within those directories into the `train`, `val` and `test` directories of your dataset. If your dataset uses a different naming convention, make sure that all `_depth.npz` files correspond to the correct image within the directories of your dataset. To replicate the results of our `DONeRF-noGT` experiments, you can overwrite the existing groundtruth `_depth.npz` files with the depth estimates that were generated in the previous step.
+
+4. Make sure that your `dataset_info.json` within your dataset directory has `"flip_depth"` and `"depth_distance_adjustment"` set to `false`, otherwise you will end up with either incorrectly flipped depth or distorted depth when training the depth oracles.
+
+5. Your dataset should now be set up correctly, including the `_depth.npz` that were generated from a large capacity NeRF and the correct options within `dataset_info.json`. You can now proceed to train a DONeRF as described in the "Training / Example Commands" section above, which should work without any other adjustments with the same commands.
+
+
 ### Citation
 
 If you find this repository useful in any way or use/modify DONeRF in your research, please consider citing our paper:
