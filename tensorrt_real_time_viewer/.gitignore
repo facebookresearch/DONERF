@@ -1,0 +1,12 @@
+
+# IDE files
+.vs/
+.vscode/
+
+# Build files
+/out/
+/build/
+
+# Sample runtime files (engine, outputs, ...)
+sample/engine*
+sample/*.bmp

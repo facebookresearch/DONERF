@@ -12,6 +12,11 @@ The majority of this project is licensed under CC-BY-NC, except for adapted thir
 * [FLIP](https://github.com/NVlabs/flip) is licensed under the BSD-3 license
 * [Python-IW-SSIM](https://github.com/Jack-guo-xy/Python-IW-SSIM) is licensed under the BSD license
 
+For the real-time viewer (`tensorrt_real_time_viewer`), we additionally adapt the following third-party code, which is available under separate license terms:
+* [glm](https://github.com/g-truc/glm) is licensed under the MIT license
+* [TensorRT](https://github.com/NVIDIA/TensorRT) is licensed under the Apache license
+* [argparse](http://github.com/p-ranav/argparse ) is licensed under the MIT license
+* [GL_core_tools, GL_platform_tools, GLSL_build_tools, Win32_core_tools](https://github.com/GPUPeople/cuRE) are licensed under the MIT license
 
 ### General
 This repository contains the source code for the paper "DONeRF: Towards Real-Time Rendering of Compact Neural Radiance Fields using Depth Oracle Networks", as well as a customized/partial port of the [nerf-pytorch](https://github.com/yenchenlin/nerf-pytorch) codebase by Yen-Chen Lin.
@@ -26,6 +31,7 @@ Long file paths generated for experiments might cause issues on Windows, so we r
 
 `requirements.txt` lists the required python packages for the code base. We recommend conda to setup the development environment. Note that PyTorch 1.8 is the minimum working version due to earlier versions having issues with the parallel dataloaders.
 
+`tensorrt_real_time_viewer/` contains our prototype code for the TensorRT+CUDA real-time viewer application.
 
 ### Datasets
 Our datasets follow a similar format as in the original NeRF code repository, where we read .json files containing the camera poses, as well as images (and depth maps) for each image from various directories.
