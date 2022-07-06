@@ -9,5 +9,5 @@ imageio-ffmpeg
 configargparse
 pillow
 pyrtools
-ptflops
+ptflops<=0.6.7
 tqdm
